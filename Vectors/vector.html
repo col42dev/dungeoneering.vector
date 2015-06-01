@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#header {
+    background-color:black;
+    color:white;
+    text-align:center;
+    padding:5px;
+}
+#nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:300px;
+    width:100px;
+    float:left;
+    padding:5px;	      
+}
+#section {
+    width:750px;
+    float:left;
+    padding:10px;	 	 
+}
+#footer {
+    background-color:black;
+    color:white;
+    clear:both;
+    text-align:center;
+   padding:5px;	 	 
+}
+</style>
+</head>
+
+<body>
+
+<div id="header">
+<h1>vector draw dungeon generation</h1>
+</div>
+
+<div id="nav">
+
+</div>
+
+<div id="section">
+
+<h4>Concept</h4>
+<p>
+     Dungeon generation using vector draw operations, UI will expose tools for generating high level dungeon features such as rooms and corridors, rather than lines and curve primitives.
+</p>
+
+<h4>Features</h4>
+
+<ul>
+
+    <li>Selection from a palette of default room shapes .
+    <li>Rooms can be freely rotated and scaled after placement.
+    <li>Multiple rooms can be selected and 'joined' to form a single room - this technique can be used to form more irregular shaped rooms. The outline of the resulting room will be the outline of the rooms which were joined.
+    <li>Rooms can overlap without being joined.
+    <li>Any two rooms can be connected by a corridor, corridors remain connected to rooms when they are edited ( scaled/moved/rotated). Corridors can be scaled in width. Corridors can have 'control points' which can be used to make them curved or to route them along a set path. 
+    <li>If corridors overlap then this will be implemented as an intersection.
+   
+
+</ul>
+
+
+<p>Example room/corridor layout generated using vector drawing ( <a href = "http://vectorpaint.yaks.co.nz/">http://vectorpaint.yaks.co.nz/</a>)</p>
+
+
+
+<img src="vectorroomexample.jpeg" width=460 height =266>
+
+
+
+
+
+
+<h4>Examples:</h4>
+
+<p>
+These examples are used to understand what issues may arise when using vector drawing to generate them.
+
+
+</p>
+
+<b>Example 1</b></br>
+<img src="11ec44c8eccf9d2ca0c5c794a6257eb5.jpg">
+
+
+<p>
+The two floors of this building are made up of multiple rooms. Considering the second floor, you can position separate rooms adjacent to each other to achieve this (not connected by corridors). A typical editing requirement would be to edit the entire floor as a single operation (scale or rotate it), this would be very cumbersome to do separatly to all of the component rooms which make up the floor. To do this as a single transform you would need to be able to multiply select rooms and edit the vector transforms applied to all of them at the same time, if the selected rooms were then rescaled/repositioned they would maintain their adjacency - the floor would scale/rotate as a single object. 
+
+<ul>
+<li> multiple room selection UI.
+<li> edit transform applies to all selected rooms.
+<li> UI means of selection to specify a center of rotation/scaling.  
+</ul>
+</p>
+
+
+
+<b>Example 2</b></br>
+<img src="jbhMN22XZw6TOA.jpg">
+
+<p>
+    Conceptually some of the 'rooms' in these levels are not clearly defined as rooms or corridors, the level creator may consider them all as adjacent rooms. These rooms are irregular linear geometry shapes surrounding one circular tower. As a user you would probably want to start with the outline of the building and partition the rooms up within that outline.  Since none of the rooms follow regular geometrical shapes you would not be able to select them directly from a palette, the user would be forced to use some lower-level UI vector concepts in order to generate these levels, which would probably require dragging out a line to draw each individual wall. It may be anyway that the level generator would prefer to think of the generation process for these levels as a sequence of wall placements rather than room placements.
+
+<ul>
+<li> Wall selection placement. Place a section of wall at any angle, change its length, connect it up to other wall sections to form a room.
+</ul>
+
+    Most of the dungeon level maps here on <a href="https://www.pinterest.com/kevinshrapnell/rpg-maps/?utm_campaign=boardinvite&e_t=8df281475b9f43b0ae4612fbbe9c3107&utm_medium=2000&utm_source=31&e_t_s=board-name">pinterest</a> include rooms which are linear in shape but are not regular geometrically shaped. To give the user the flexibility to generate these accurately comes down to them placing the individual room walls. 
+</p>
+
+
+<b>Example 3</b></br>
+<img src="3fcb2852f8353f9e7d9bbb871ef3f52b.jpg">
+
+
+<p>
+  Many dungeon level maps consist of both geometrically shaped rooms and cavernous shaped rooms. Vector geometry is well suited to the former but it could also be used for the latter by applying an 'irregularity' filter, this could just be a noise filter which is applied to each vector wall facing. In terms of UI you could select an area of the dungeon ( or specific rooms or corridors) and apply this filter. This <a href= "http://rjanicek.github.io/voronoi-map-js/">example</a> show how a noise filter can be applied to low resolution vector edges - toggle the 'view' drop-down to 'debug-polygons' see the original polygon shapes. 
+</p>
+
+<p>
+  From the examples given above, the level generator would need to be aware of the concepts of vector geometry (scaling, rotation). This is perhaps a degree of complexity above that required for painting tiles to generate a dungeon layout. 
+</p>
+
+
+
+<h4>Rooms Shape Palette:</h4>
+<p>This palette will include the set of regular geometrical shapes, it can also contain sets of pre-generated irregular geometry room shapes. Doing this would allow generation of more elaborate dungeons without the need for providing an interface which requires placing individual wall sections. It would be straight forward for us to provide a varied set of these room outlines. Additionally we could support  <a href="https://en.wikipedia.org/wiki/Scalable_Vector_Graphics">SVG file format</a> for these rooms so that they can be generated in a SVG package and imported by our editor.</p>
+
+
+<h4>Generating 3D geometry from 2D vector level layout</h4>
+<p>In principle the 2D geometry can be extruded as 3D walls, or it can be used as a guideline for placing rows of pre-generated wall model sections. Rooms and corridors could also be flagged with elevation values, these could be used for generating different tiers within a level layout.</p>
+
+<h4>Object placement</h4>
+<p>Objects can be selected from a asset library and placed at any point on the level. We would want to connect them to the rooms they are placed in so that when that room is edited they are updated accordingly.</p>
+
+
+<h4>Export format:</h4>
+<p> If a level is defined by scalable vector geometry then ideally it would be exported in this format rather than a raw geometry format for example. The runtime would then need to include the same vector engine as the editor to allow it to construct/select the 3D mesh models to use. This could introduce a versioning dependency between the two, raw geometry would not have this dependency but would be a less efficient way to store the level.</p> 
+
+
+<h4>Implementation considerations</h4>
+
+<p>
+   A dungeon location is represented as a mathematical graph structure where nodes are rooms and branches are corridors. Each time a room is placed it creates a new mathematical graph instance of a single node, it only gets joined to other graphs when it is connected by a corridor. So the resulting dungeon may be represented by many separate graphs. The purpose of using a graph representation is to keep track of corridor connections between rooms so the rooms can't be edited without losing their corridor connections - it has no navigation significance for example.
+
+
+</p>
+
+
+<h4>References</h4>
+
+<ul>
+
+</ul>
+
+</div>
+
+<div id="footer">
+<a href="http://magicfuelgames.com">magicfuelgames.com</a>
+</div>
+
+</body>
+
+</html>
