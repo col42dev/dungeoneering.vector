@@ -16,6 +16,7 @@ public class InputHandler : MonoBehaviour {
 	int lastZpos = -1;
 
 	bool bPlaceingWall = false;
+	bool bEditingWall = false;
 
 	// Use this for initialization
 	void Start () {
@@ -53,16 +54,16 @@ public class InputHandler : MonoBehaviour {
 		}
 
 		// camera pan
-		if (Input.GetMouseButtonDown(0))
+		if (Input.GetMouseButtonDown(1))
 		{
-			camerPanLastMousePosition = Input.mousePosition;
+		//	camerPanLastMousePosition = Input.mousePosition;
 		}
 
 
 		switch ( mapGenMenu.GetViewMenuSelectionIndex())
 		{
 		case 0:
-			if (Input.GetMouseButton(0))
+			if (Input.GetMouseButton(1))
 			{
 				Vector3 delta  = Input.mousePosition - camerPanLastMousePosition;
 				transform.Translate(delta.x * mouseSensitivity, delta.y * mouseSensitivity, 0);
@@ -70,7 +71,7 @@ public class InputHandler : MonoBehaviour {
 			transform.localEulerAngles  = new Vector3(90, 0, 0);
 			break;
 		case 1:
-			if (Input.GetMouseButton(0))
+			if (Input.GetMouseButton(1))
 			{
 				Vector3 delta  = Input.mousePosition - camerPanLastMousePosition;
 				transform.Translate(delta.x * mouseSensitivity, delta.y * mouseSensitivity, delta.y * mouseSensitivity);
@@ -138,16 +139,29 @@ public class InputHandler : MonoBehaviour {
 				{
 					if (Input.GetMouseButtonDown(0))
 					{
+						Debug.Log("bEditingWall:true");
+						bEditingWall = true;
 						mapGen.editPoint( pointerPosition);
 					}
-					else if ( Input.GetKeyDown(KeyCode.Escape))
+
+
+					if ( Input.GetKeyDown(KeyCode.Backspace))
 					{
-						mapGen.editPoint(Vector3.zero);
-					}
-					else if ( Input.GetKeyDown(KeyCode.Backspace))
-					{
+						Debug.Log("bEditingWall:false - undo");
+						bEditingWall = false;
 						mapGen.removePoint( pointerPosition );
 					}
+
+					if ( Input.GetMouseButtonUp(0))
+					{
+						if ( bEditingWall == true)
+						{
+							Debug.Log("bEditingWall:false");
+							bEditingWall = false;
+							mapGen.editPoint( pointerPosition);
+						}
+					}
+
 				}
 			}
 		}
