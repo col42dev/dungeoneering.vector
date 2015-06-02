@@ -50,11 +50,11 @@ public class MapGen : MonoBehaviour {
 			lr.SetWidth (0.25f, 0.25f);
 
 			Vector3 startPos = points[0].point;
-			startPos.y += 0.5f;
+			startPos.y += kEdgeY;
 			lr.SetPosition (0, startPos);
 			
 			Vector3 endPos = points[1].point;
-			endPos.y += 0.5f;
+			endPos.y += kEdgeY;
 			lr.SetPosition (1, endPos);
 
 
@@ -101,6 +101,7 @@ public class MapGen : MonoBehaviour {
 	List<VRoom> rooms = new List<VRoom> ();
 
 	private const float kEndPointProximityThreshold = 1.0f;
+	private const float kEdgeY = 0.05f;
 
 	ObjImporter objImporter = new ObjImporter ();
 
@@ -125,13 +126,13 @@ public class MapGen : MonoBehaviour {
 			lr.SetWidth (0.25f, 0.25f);
 		
 			Vector3 startPos = activeEdge.points[0].point;
-			startPos.y += 0.5f;
+			startPos.y += kEdgeY;
 			lr.SetPosition (0, startPos);
 		
 			if (targetGameObj != null) 
 			{
 				Vector3 endPos = targetGameObj.transform.position;
-				endPos.y += 0.5f;
+				endPos.y += kEdgeY;
 				lr.SetPosition (1, endPos);
 			}
 		}
@@ -151,11 +152,11 @@ public class MapGen : MonoBehaviour {
 						LineRenderer lr = edge.gfx.GetComponent<LineRenderer>();
 
 						Vector3 startPos = edge.points[0].point;
-						startPos.y += 0.5f;
+						startPos.y += kEdgeY;
 						lr.SetPosition (0, startPos);
 						
 						Vector3 endPos = edge.points[1].point;
-						endPos.y += 0.5f;
+						endPos.y += kEdgeY;
 						lr.SetPosition (1, endPos);
 					}
 				}
@@ -174,11 +175,11 @@ public class MapGen : MonoBehaviour {
 				LineRenderer lr = edge.gfx.GetComponent<LineRenderer>();
 				
 				Vector3 startPos = edge.points[0].point + targetPos;
-				startPos.y += 0.5f;
+				startPos.y += kEdgeY;
 				lr.SetPosition (0, startPos);
 				
 				Vector3 endPos = edge.points[1].point + targetPos;
-				endPos.y += 0.5f;
+				endPos.y += kEdgeY;
 				lr.SetPosition (1, endPos);
 			}
 
@@ -255,7 +256,8 @@ public class MapGen : MonoBehaviour {
 			}
 		}
 		
-		if (mindist <= kEndPointProximityThreshold) {
+		if (mindist < kEndPointProximityThreshold) {
+			Debug.Log("Found EndPoint:" + mindist);
 			ep = closestEndpoint;
 			return false;
 		} else {
@@ -288,8 +290,14 @@ public class MapGen : MonoBehaviour {
 		return Vector3.zero;
 	}
 
-	private Edge EdgeInProximity( Vector3 point)
+	private Edge EdgeInProximity( Vector3 point, bool bEdgeSnap)
 	{
+		if (bEdgeSnap == false) 
+		{
+		
+			return null;
+		}
+
 		Edge nearestEdge = null;
 		float mindist = Mathf.Infinity;
 		foreach (Edge edge in edges) 
@@ -303,9 +311,9 @@ public class MapGen : MonoBehaviour {
 		}
 	
 		Edge returnNearestEdge = null;
-		if (mindist < kEndPointProximityThreshold) 
+		if (mindist < kEndPointProximityThreshold ) 
 		{
-			returnNearestEdge = nearestEdge;
+				returnNearestEdge = nearestEdge;
 		}
 
 		return returnNearestEdge;
@@ -333,10 +341,10 @@ public class MapGen : MonoBehaviour {
 			LineRenderer lr = edgeA.gfx.GetComponent<LineRenderer> ();
 			lr.SetWidth (0.25f, 0.25f);
 			Vector3 startPos = edgeA.points[0].point;
-			startPos.y += 0.5f;
+			startPos.y += kEdgeY;
 			lr.SetPosition (0, startPos);
 			Vector3 endPos = edgeA.points[1].point;
-			endPos.y += 0.5f;
+			endPos.y += kEdgeY;
 			lr.SetPosition (1, endPos);
 		}
 		ep.edges.Add (edgeA);
@@ -351,10 +359,10 @@ public class MapGen : MonoBehaviour {
 			LineRenderer lr = edgeB.gfx.GetComponent<LineRenderer> ();
 			lr.SetWidth (0.25f, 0.25f);
 			Vector3 startPos = edgeB.points[0].point;
-			startPos.y += 0.5f;
+			startPos.y += kEdgeY;
 			lr.SetPosition (0, startPos);
 			Vector3 endPos = edgeB.points[1].point;
-			endPos.y += 0.5f;
+			endPos.y += kEdgeY;
 			lr.SetPosition (1, endPos);
 		}
 		ep.edges.Add (edgeB);
@@ -382,7 +390,7 @@ public class MapGen : MonoBehaviour {
 		activeRoom = rooms [index];
 	}
 
-	public void placeRoom(Vector3 point)
+	public void placeRoom(Vector3 point, bool bEdgeSnap)
 	{
 		Debug.Log ("placeRoom");
 
@@ -402,7 +410,7 @@ public class MapGen : MonoBehaviour {
 
 				if ( MakeEndPoint(startEndPoint.point, ref startEndPoint))
 				{	// new endpoint
-					Edge nearestEdge = EdgeInProximity(startEndPoint.point);
+					Edge nearestEdge = EdgeInProximity(startEndPoint.point, bEdgeSnap);
 					if (nearestEdge!= null)
 					{
 						Vector3 edgePoint =  NearestPointOnEdge( startEndPoint.point, nearestEdge);
@@ -469,11 +477,11 @@ public class MapGen : MonoBehaviour {
 				LineRenderer lr = edge.gfx.GetComponent<LineRenderer>();
 				
 				Vector3 startPos = edge.points[0].point;
-				startPos.y += 0.5f;
+				startPos.y += kEdgeY;
 				lr.SetPosition (0, startPos);
 				
 				Vector3 endPos = edge.points[1].point;
-				endPos.y += 0.5f;
+				endPos.y += kEdgeY;
 				lr.SetPosition (1, endPos);
 			}
 			
@@ -484,9 +492,8 @@ public class MapGen : MonoBehaviour {
 		activeRoom = null;
 	}
 
-	public void placePoint( Vector3 point) 
+	public void placePoint( Vector3 point, bool bEdgeSnap) 
 	{
-		Debug.Log ("PP");
 		if (point != Vector3.zero) 
 		{
 			if (activeEdge.points.Count == 0)
@@ -501,7 +508,9 @@ public class MapGen : MonoBehaviour {
 				}
 				else 
 				{
-					Edge nearestEdge = EdgeInProximity(startPoint);
+					Debug.Log(bEdgeSnap);
+
+					Edge nearestEdge = EdgeInProximity(startPoint, bEdgeSnap);
 					if ( nearestEdge != null )
 					{
 						startPoint =  NearestPointOnEdge(startPoint, nearestEdge); 
@@ -521,7 +530,9 @@ public class MapGen : MonoBehaviour {
 				EndPoint startEndPoint = activeEdge.points[0];
 				if ( MakeEndPoint(startEndPoint.point, ref startEndPoint))
 				{
-					Edge nearestEdge = EdgeInProximity(startEndPoint.point);
+					Debug.Log(bEdgeSnap);
+
+					Edge nearestEdge = EdgeInProximity(startEndPoint.point, bEdgeSnap);
 					if (nearestEdge!= null)
 					{
 						Vector3 edgePoint =  NearestPointOnEdge( startEndPoint.point, nearestEdge);
@@ -540,7 +551,9 @@ public class MapGen : MonoBehaviour {
 				EndPoint endEndPoint = null;
 				if ( MakeEndPoint(point, ref endEndPoint))
 				{
-					Edge nearestEdge = EdgeInProximity(point);
+					Debug.Log(bEdgeSnap);
+
+					Edge nearestEdge = EdgeInProximity(point, bEdgeSnap);
 					if (nearestEdge!= null)
 					{
 						Vector3 edgePoint =  NearestPointOnEdge( point, nearestEdge);
@@ -560,7 +573,7 @@ public class MapGen : MonoBehaviour {
 				// Update Render
 				LineRenderer lr = activeEdge.gfx.GetComponent<LineRenderer>();
 				Vector3 endPos = activeEdge.points[1].point;
-				endPos.y += 0.5f;
+				endPos.y += kEdgeY;
 				lr.SetPosition (1, endPos);
 
 				// Add new Edge to global edge list
@@ -651,7 +664,7 @@ public class MapGen : MonoBehaviour {
 								LineRenderer lr = edge.gfx.GetComponent<LineRenderer>();
 									
 								Vector3 pointPos = edge.points[epIndex].point;
-								pointPos.y += 0.5f;
+								pointPos.y += kEdgeY;
 								lr.SetPosition (epIndex, pointPos);
 
 								endPoint.edges.Add(edge);

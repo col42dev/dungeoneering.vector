@@ -101,6 +101,7 @@ GameObject:
   - 81: {fileID: 62418564}
   - 114: {fileID: 62418563}
   - 114: {fileID: 62418569}
+  - 114: {fileID: 62418570}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -201,6 +202,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1810550380}
+--- !u!114 &62418570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 62418562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17a88cd7c75bc401097b8f95a1e2b1de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showMain: 1
+  showSub: 1
+  gridSizeX: 50
+  gridSizeY: 0
+  gridSizeZ: 50
+  smallStep: 1
+  largeStep: 10
+  startX: 0
+  startY: .100000001
+  startZ: 0
 --- !u!1 &377366657
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,7 +291,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 377366657}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25, y: 0, z: 25}
+  m_LocalPosition: {x: 25, y: -.00999999978, z: 25}
   m_LocalScale: {x: 5, y: 1, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -403,12 +425,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 0}
-  position:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 128
-    height: 100
 --- !u!4 &1556044802
 Transform:
   m_ObjectHideFlags: 0

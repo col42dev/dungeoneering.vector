@@ -53,12 +53,6 @@ public class InputHandler : MonoBehaviour {
 			return;
 		}
 
-		// camera pan
-		if (Input.GetMouseButtonDown(1))
-		{
-		//	camerPanLastMousePosition = Input.mousePosition;
-		}
-
 
 		switch ( mapGenMenu.GetViewMenuSelectionIndex())
 		{
@@ -94,10 +88,13 @@ public class InputHandler : MonoBehaviour {
 		{
 			Vector3 pointerPosition = ray.GetPoint(hitDist);
 
-			if ( lastXpos != (int)Math.Floor(pointerPosition.x) || lastZpos !=(int)Math.Floor(pointerPosition.z)) 
+			pointerPosition.x = Mathf.RoundToInt(pointerPosition.x);
+			pointerPosition.z = Mathf.RoundToInt(pointerPosition.z);
+
+			if ( lastXpos != (int)pointerPosition.x || lastZpos !=(int)pointerPosition.z) 
 			{
-				lastXpos = (int)Math.Floor( pointerPosition.x);
-				lastZpos = (int)Math.Floor( pointerPosition.z);
+				lastXpos = (int) pointerPosition.x;
+				lastZpos = (int) pointerPosition.z;
 			}
 
 			if ( mapGenMenu.GetMainMenuSelection() == EMainMenu.kTools) 
@@ -107,23 +104,22 @@ public class InputHandler : MonoBehaviour {
 					if (Input.GetMouseButtonDown(0))
 					{
 						bPlaceingWall = true;
-						mapGen.placePoint( pointerPosition);
+						mapGen.placePoint( pointerPosition, Input.GetButton("Jump"));
 					}
-
 
 					if (Input.GetMouseButtonUp(0))
 					{
 						if ( bPlaceingWall == true)
 						{
 							bPlaceingWall = false;
-							mapGen.placePoint( pointerPosition);
-							mapGen.placePoint(Vector3.zero);
+							mapGen.placePoint( pointerPosition, Input.GetButton("Jump"));
+							mapGen.placePoint(Vector3.zero, Input.GetButton("Jump"));
 						}
 					}
 
 					if ( Input.GetKeyDown(KeyCode.Backspace) && bPlaceingWall == true)
 					{
-						mapGen.placePoint(Vector3.zero);
+						mapGen.placePoint(Vector3.zero, Input.GetButton("Jump"));
 					}
 				}
 
@@ -131,7 +127,7 @@ public class InputHandler : MonoBehaviour {
 				{
 					if (Input.GetMouseButtonDown(0))
 					{
-						mapGen.placeRoom( pointerPosition);
+						mapGen.placeRoom( pointerPosition, Input.GetButton("Jump"));
 					}
 				}
 
@@ -139,7 +135,6 @@ public class InputHandler : MonoBehaviour {
 				{
 					if (Input.GetMouseButtonDown(0))
 					{
-						Debug.Log("bEditingWall:true");
 						bEditingWall = true;
 						mapGen.editPoint( pointerPosition);
 					}
@@ -147,7 +142,6 @@ public class InputHandler : MonoBehaviour {
 
 					if ( Input.GetKeyDown(KeyCode.Backspace))
 					{
-						Debug.Log("bEditingWall:false - undo");
 						bEditingWall = false;
 						mapGen.removePoint( pointerPosition );
 					}
@@ -156,7 +150,6 @@ public class InputHandler : MonoBehaviour {
 					{
 						if ( bEditingWall == true)
 						{
-							Debug.Log("bEditingWall:false");
 							bEditingWall = false;
 							mapGen.editPoint( pointerPosition);
 						}

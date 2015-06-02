@@ -19,7 +19,6 @@ public enum EEditMenu {
 }
 
 public class MapGenMenu : MonoBehaviour {
-	
 
 	public Dictionary<EMainMenu, string> mainToolbarDictionary = new  Dictionary<EMainMenu, string>();
 	public Dictionary<EToolsMenu, string> toolsToolbarDictionary = new  Dictionary<EToolsMenu, string>();
@@ -29,15 +28,9 @@ public class MapGenMenu : MonoBehaviour {
 	private int toolsToolBarIndex = 0;
 	private int editToolBarIndex = 0;
 	private int viewsToolBarIndex = 0;
-	private int gridsToolBarIndex = 0;
-
-
+	private int gridsToolBarIndex = 0;	
 	private MapGen  mapGen = null;
-
-
-
-	public Material material;
-	public Rect position;
+	public Material material = null;
 
 
 	public EMainMenu GetMainMenuSelection()
@@ -66,9 +59,6 @@ public class MapGenMenu : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 	
-		//mainToolbarDictionary[EMainMenu.kFile] =  "File"; 
-		//mainToolbarDictionary[EMainMenu.kEdit] =  "Edit"; 
-		//mainToolbarDictionary[EMainMenu.kView] =  "View"; 
 		mainToolbarDictionary[EMainMenu.kTools] =  "Tools"; 
 
 		toolsToolbarDictionary[EToolsMenu.kPlaceWall] =  "Place Wall"; 
@@ -76,10 +66,6 @@ public class MapGenMenu : MonoBehaviour {
 		toolsToolbarDictionary[EToolsMenu.kPlaceRoom] =  "Place Room"; 
 
 		editToolbarDictionary[EEditMenu.kSelectGrid] =  "Grid"; 
-
-
-		material = Resources.Load("Materials/LineGFX", typeof(Material)) as Material; 
-		position = new Rect (0, 0, Screen.width, 100);
 	}
 	
 	// Update is called once per frame
@@ -99,7 +85,7 @@ public class MapGenMenu : MonoBehaviour {
 
 	void OnGUI() 
 	{
-		DrawRectangle (position, Color.red);  
+		DrawRectangle (new Rect (0, 0, Screen.width, 100), Color.red);  
 
 		string [] foos = new string[mainToolbarDictionary.Count];
 		mainToolbarDictionary.Values.CopyTo(foos, 0);
@@ -118,18 +104,17 @@ public class MapGenMenu : MonoBehaviour {
 				int toolbarInt = toolsToolBarIndex;
 				toolsToolBarIndex = GUI.Toolbar (new Rect (15, 45, 250, 25), toolsToolBarIndex, editstrings);
 
-
 				switch(toolsToolBarIndex)
 				{
 				case (int)EToolsMenu.kPlaceWall:
-					if (mapGen != null) {
-
+					if (mapGen != null) 
+					{
 						//mapGen.PlaceWallPoint();
 					}
 					break;
 				case (int)EToolsMenu.kPlaceRoom:
-					if (mapGen != null) {
-						
+					if (mapGen != null) 
+					{	
 						if (GUI.Button (new Rect (15, 75, 80, 25), "Template A")) {
 							mapGen.OnSelectRoomTemplate(0);
 						}
@@ -143,37 +128,7 @@ public class MapGenMenu : MonoBehaviour {
 
 			}
 			break;
-		/*
-		case (int)EMainMenu.kEdit:
-			if (mapGen != null) {
-				
-		
-			}
-			break;
 
-		case (int)EMainMenu.kView:
-			if (mapGen != null) 
-			{
-				string [] toolbarStrings = new string[] {"plan", "3D"};
-				
-				int toolbarInt = viewsToolBarIndex;
-				viewsToolBarIndex = GUI.Toolbar (new Rect (15, 45, 250, 25), viewsToolBarIndex, toolbarStrings);
-			}
-			break;
-
-
-		case (int)EMainMenu.kFile:
-			{
-				if (mapGen != null) {
-					if (GUI.Button (new Rect (15, 45, 50, 25), "Save")) {
-					}
-
-					if (GUI.Button (new Rect (75, 45, 50, 25), "Load")) {	
-					}
-				}
-			}
-			break;
-					*/
 		}
 
 
@@ -190,8 +145,7 @@ public class MapGenMenu : MonoBehaviour {
 		
 		// Please assign a material that is using position and color.
 		if (material == null) {
-			Debug.LogError ("You have forgot to set a material.");
-			return;
+			material = Resources.Load("Materials/LineGFX", typeof(Material)) as Material; 
 		}
 		
 		material.SetPass (0);
