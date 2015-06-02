@@ -18,7 +18,8 @@ public enum EEditMenu {
 
 }
 
-public class MapGenMenu : MonoBehaviour {
+public class ViewMapGenMenu : MonoBehaviour {
+	
 
 	public Dictionary<EMainMenu, string> mainToolbarDictionary = new  Dictionary<EMainMenu, string>();
 	public Dictionary<EToolsMenu, string> toolsToolbarDictionary = new  Dictionary<EToolsMenu, string>();
@@ -29,7 +30,7 @@ public class MapGenMenu : MonoBehaviour {
 	private int editToolBarIndex = 0;
 	private int viewsToolBarIndex = 0;
 	private int gridsToolBarIndex = 0;	
-	private MapGen  mapGen = null;
+	private ModelMapGen  mapGen = null;
 	public Material material = null;
 
 
@@ -73,10 +74,10 @@ public class MapGenMenu : MonoBehaviour {
 
 		if ( mapGen == null)
 		{
-			GameObject mapgenGameObj = GameObject.Find ("MapGen");
+			GameObject mapgenGameObj = GameObject.Find ( GameObjectHierarchyRef.kGameObjectNameModelMapGen );
 			if (mapgenGameObj != null) 
 			{
-				mapGen = mapgenGameObj.GetComponent<MapGen>();
+				mapGen = mapgenGameObj.GetComponent<ModelMapGen>();
 			}
 		}
 	}

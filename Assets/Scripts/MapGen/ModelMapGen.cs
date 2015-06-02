@@ -1,18 +1,12 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading;
-//using System.IO;
-//using Newtonsoft.Json;
-//using Newtonsoft.Json.Serialization;
-
-//using System.Reflection;
 
 
 
-public class MapGen : MonoBehaviour {
 
+public class ModelMapGen : MonoBehaviour {
+	
 
 	GameObject targetGameObj = null;
 
@@ -110,7 +104,7 @@ public class MapGen : MonoBehaviour {
 	void Start () 
 	{
 		activeEdge.gfx = Object.Instantiate( LineGFXPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-		targetGameObj = GameObject.Find ("Target");
+		targetGameObj = GameObject.Find ( GameObjectHierarchyRef.kGameObjectNamePointerTarget);
 
 		CreateRooms ();
 	}
@@ -257,7 +251,6 @@ public class MapGen : MonoBehaviour {
 		}
 		
 		if (mindist < kEndPointProximityThreshold) {
-			Debug.Log("Found EndPoint:" + mindist);
 			ep = closestEndpoint;
 			return false;
 		} else {
@@ -302,7 +295,7 @@ public class MapGen : MonoBehaviour {
 		float mindist = Mathf.Infinity;
 		foreach (Edge edge in edges) 
 		{
-			float dist = VectorUtils.DistancePointLine (point, edge.points [0].point, edge.points [1].point);
+			float dist = VectorUtils.DistancePointLine( point, edge.points [0].point, edge.points [1].point);
 			if (dist < mindist) 
 			{
 				mindist = dist;
@@ -321,7 +314,7 @@ public class MapGen : MonoBehaviour {
 
 	private Vector3 NearestPointOnEdge( Vector3 point, Edge edge)
 	{
-		return   VectorUtils.ProjectPointLine(point, edge.points [0].point, edge.points [1].point);
+		return   VectorUtils.ProjectPointLine( point, edge.points [0].point, edge.points [1].point);
 	}
 
 	private EndPoint SplitEdge(Edge edge, Vector3 atPoint)
@@ -386,14 +379,11 @@ public class MapGen : MonoBehaviour {
 
 	public void OnSelectRoomTemplate(int index)
 	{
-		Debug.Log ("OnSelectRoomTemplate");
 		activeRoom = rooms [index];
 	}
 
 	public void placeRoom(Vector3 point, bool bEdgeSnap)
 	{
-		Debug.Log ("placeRoom");
-
 		// update active room
 		if (activeRoom != null)
 		{
@@ -716,8 +706,6 @@ public class MapGen : MonoBehaviour {
 			endpoints.Remove (activeEndPoint);
 			activeEndPoint = null;
 
-			Debug.Log ("Edges " + edges.Count);
-			Debug.Log ("EndPoints " + endpoints.Count);
 		} else {
 			// remove wall section at point position
 

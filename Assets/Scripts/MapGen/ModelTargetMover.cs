@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TargetMover : MonoBehaviour {
+public class ModelTargetMover : MonoBehaviour {
 
 	public Transform target;
 	

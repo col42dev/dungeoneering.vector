@@ -3,12 +3,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class InputHandler : MonoBehaviour {
-
+public class ControllerMapGen : MonoBehaviour {
+		
+	private string kButtonNameNoSnap = "Jump";
 	private float mouseSensitivity  = 0.2f;
 	private Vector3 camerPanLastMousePosition = new Vector3();
-	private MapGenMenu  mapGenMenu = null;
-	private MapGen  mapGen = null;
+	private ViewMapGenMenu  mapGenMenu = null;
+	private ModelMapGen  mapGen = null;
 	
 	Plane floorPlane;
 
@@ -29,20 +30,20 @@ public class InputHandler : MonoBehaviour {
 	
 		if ( mapGen == null)
 		{
-			GameObject mapgenGameObj = GameObject.Find("MapGen");
+			GameObject mapgenGameObj = GameObject.Find( GameObjectHierarchyRef.kGameObjectNameModelMapGen);
 			if (mapgenGameObj != null) 
 			{
-				mapGen = mapgenGameObj.GetComponent<MapGen>();
+				mapGen = mapgenGameObj.GetComponent<ModelMapGen>();
 			}
 			return;
 		} 
 
 		if ( mapGenMenu == null)
 		{
-			GameObject mapgenMenuGameObj = GameObject.Find("MapGenMenu");
+			GameObject mapgenMenuGameObj = GameObject.Find( GameObjectHierarchyRef.kGameObjectNameViewMapGenMenu);
 			if (mapgenMenuGameObj != null) 
 			{
-				mapGenMenu = mapgenMenuGameObj.GetComponent<MapGenMenu>();
+				mapGenMenu = mapgenMenuGameObj.GetComponent<ViewMapGenMenu>();
 			}
 			return;
 		} 
@@ -104,7 +105,7 @@ public class InputHandler : MonoBehaviour {
 					if (Input.GetMouseButtonDown(0))
 					{
 						bPlaceingWall = true;
-						mapGen.placePoint( pointerPosition, Input.GetButton("Jump"));
+						mapGen.placePoint( pointerPosition, Input.GetButton(kButtonNameNoSnap));
 					}
 
 					if (Input.GetMouseButtonUp(0))
@@ -112,14 +113,14 @@ public class InputHandler : MonoBehaviour {
 						if ( bPlaceingWall == true)
 						{
 							bPlaceingWall = false;
-							mapGen.placePoint( pointerPosition, Input.GetButton("Jump"));
-							mapGen.placePoint(Vector3.zero, Input.GetButton("Jump"));
+							mapGen.placePoint( pointerPosition, Input.GetButton(kButtonNameNoSnap));
+							mapGen.placePoint(Vector3.zero, Input.GetButton(kButtonNameNoSnap));
 						}
 					}
 
 					if ( Input.GetKeyDown(KeyCode.Backspace) && bPlaceingWall == true)
 					{
-						mapGen.placePoint(Vector3.zero, Input.GetButton("Jump"));
+						mapGen.placePoint(Vector3.zero, Input.GetButton(kButtonNameNoSnap));
 					}
 				}
 
@@ -127,7 +128,7 @@ public class InputHandler : MonoBehaviour {
 				{
 					if (Input.GetMouseButtonDown(0))
 					{
-						mapGen.placeRoom( pointerPosition, Input.GetButton("Jump"));
+						mapGen.placeRoom( pointerPosition, Input.GetButton(kButtonNameNoSnap));
 					}
 				}
 

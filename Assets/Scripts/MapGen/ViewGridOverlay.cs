@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GridOverlay : MonoBehaviour {
+public class ViewGridOverlay : MonoBehaviour {
 	
 	//public GameObject plane;
 	
