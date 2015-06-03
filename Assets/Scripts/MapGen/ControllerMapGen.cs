@@ -81,12 +81,22 @@ public class ControllerMapGen : MonoBehaviour {
 		// Zoom
 		transform.Translate(0.0f, 0.0f, Input.GetAxis("Mouse ScrollWheel") * 12);
 
+
+		Vector2 screenPosition = Input.mousePosition;
+
+		if (Input.touchCount == 1) 
+		{
+			screenPosition = Input.GetTouch(0).position;
+		}
 	
-		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+		Ray ray = Camera.main.ScreenPointToRay (screenPosition);
 		float hitDist = 0.0f;
 
-		if ( Input.mousePosition.y < (Screen.height - 100) && floorPlane.Raycast( ray, out hitDist)) 
+		if ( screenPosition.y < (Screen.height - 100) && floorPlane.Raycast( ray, out hitDist)) 
 		{
+			bool inputPlaceBegin = Input.GetMouseButtonDown(0) || (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began);
+			bool inputPlaceEnd = Input.GetMouseButtonUp(0) || (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended);
+
 			Vector3 pointerPosition = ray.GetPoint(hitDist);
 
 			pointerPosition.x = Mathf.RoundToInt(pointerPosition.x);
@@ -102,13 +112,13 @@ public class ControllerMapGen : MonoBehaviour {
 			{
 				if ( mapGenMenu.GetToolsMenuSelection() == EToolsMenu.kPlaceWall) 
 				{
-					if (Input.GetMouseButtonDown(0))
+					if (inputPlaceBegin)
 					{
 						bPlaceingWall = true;
 						mapGen.placePoint( pointerPosition, Input.GetButton(kButtonNameNoSnap));
 					}
 
-					if (Input.GetMouseButtonUp(0))
+					if (inputPlaceEnd)
 					{
 						if ( bPlaceingWall == true)
 						{
@@ -134,7 +144,7 @@ public class ControllerMapGen : MonoBehaviour {
 
 				if ( mapGenMenu.GetToolsMenuSelection() == EToolsMenu.kEditWall) 
 				{
-					if (Input.GetMouseButtonDown(0))
+					if (inputPlaceBegin)
 					{
 						bEditingWall = true;
 						mapGen.editPoint( pointerPosition);
@@ -147,7 +157,7 @@ public class ControllerMapGen : MonoBehaviour {
 						mapGen.removePoint( pointerPosition );
 					}
 
-					if ( Input.GetMouseButtonUp(0))
+					if ( inputPlaceEnd)
 					{
 						if ( bEditingWall == true)
 						{
