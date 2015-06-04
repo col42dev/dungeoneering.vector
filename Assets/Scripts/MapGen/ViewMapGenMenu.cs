@@ -20,8 +20,7 @@ public enum EEditMenu {
 
 public class ViewMapGenMenu : MonoBehaviour {
 	
-
-	public Dictionary<EMainMenu, string> mainToolbarDictionary = new  Dictionary<EMainMenu, string>();
+	
 	public Dictionary<EToolsMenu, string> toolsToolbarDictionary = new  Dictionary<EToolsMenu, string>();
 	public Dictionary<EEditMenu, string> editToolbarDictionary = new  Dictionary<EEditMenu, string>();
 	
@@ -60,7 +59,6 @@ public class ViewMapGenMenu : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 	
-		mainToolbarDictionary[EMainMenu.kTools] =  "Tools"; 
 
 		toolsToolbarDictionary[EToolsMenu.kPlaceWall] =  "Place Wall"; 
 		toolsToolbarDictionary[EToolsMenu.kEditWall] =  "Edit Wall"; 
@@ -88,38 +86,25 @@ public class ViewMapGenMenu : MonoBehaviour {
 	{
 		DrawRectangle (new Rect (0, 0, Screen.width, 100), Color.red);  
 
-		string [] foos = new string[mainToolbarDictionary.Count];
-		mainToolbarDictionary.Values.CopyTo(foos, 0);
 
-		mainToolBarIndex = GUI.Toolbar (new Rect (15, 15, 750, 25), mainToolBarIndex, foos);
 
-		switch (mainToolBarIndex) 
-		{
-
-		case (int)EMainMenu.kTools:
 			if (mapGen != null) {
 
 				string [] editstrings = new string[toolsToolbarDictionary.Count];
 				toolsToolbarDictionary.Values.CopyTo(editstrings, 0);
 
 				int toolbarInt = toolsToolBarIndex;
-				toolsToolBarIndex = GUI.Toolbar (new Rect (15, 45, 250, 25), toolsToolBarIndex, editstrings);
+				toolsToolBarIndex = GUI.Toolbar (new Rect (15, 5, 350, 45), toolsToolBarIndex, editstrings);
 
 				switch(toolsToolBarIndex)
 				{
-				case (int)EToolsMenu.kPlaceWall:
-					if (mapGen != null) 
-					{
-						//mapGen.PlaceWallPoint();
-					}
-					break;
 				case (int)EToolsMenu.kPlaceRoom:
 					if (mapGen != null) 
 					{	
-						if (GUI.Button (new Rect (15, 75, 80, 25), "Template A")) {
+						if (GUI.Button (new Rect (15, 50, 100, 45), "Template A")) {
 							mapGen.OnSelectRoomTemplate(0);
 						}
-						if (GUI.Button (new Rect (95, 75, 80, 25), "Template B")) {
+						if (GUI.Button (new Rect (120, 50, 100, 45), "Template B")) {
 							mapGen.OnSelectRoomTemplate(1);
 						}
 					}
@@ -128,9 +113,7 @@ public class ViewMapGenMenu : MonoBehaviour {
 
 
 			}
-			break;
-
-		}
+	
 
 
 
