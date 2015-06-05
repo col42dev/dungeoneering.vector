@@ -16,8 +16,19 @@ public class ModelMapGen : MonoBehaviour {
 
 	public class Edge {
 
-		public Edge()
+		public Edge(GameObject lineGFXPrefab)
 		{
+			if (gfx != null)
+			{
+				Object.Destroy(gfx);
+			}
+
+			if (lineGFXPrefab != null)
+			{
+				gfx = Object.Instantiate( lineGFXPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+			}
+
+			CreateCollisionObject();
 		}
 
 		public Edge( EndPoint p0, EndPoint p1) 
@@ -37,6 +48,8 @@ public class ModelMapGen : MonoBehaviour {
 
 			gfx = new GameObject("edge");
 			gfx.SetActive(false);
+
+			//Line
 			gfx.AddComponent<LineRenderer>();
 
 			LineRenderer lr = gfx.GetComponent<LineRenderer>();
@@ -57,10 +70,86 @@ public class ModelMapGen : MonoBehaviour {
 			mats[0] = mat;
 			lr.materials = mats;
 
+			// Collision.
+			CreateCollisionObject();
+
+
+			UpdateCollisionObject(startPos, endPos);
+
+
 		}
 
+		public void UpdateCollisionObject( Vector3 startPos, Vector3 endPos) 
+		{
+			for (int index = 0; index < 2; index ++) {
+
+				Vector3[] vertices = new Vector3[]
+				{
+					startPos,
+					endPos,
+					startPos + new Vector3 (0, 2, 0),
+					endPos + new Vector3 (0, 2, 0)
+				};
+			
+			
+			
+				collisionObjs[index].GetComponent<MeshFilter> ().mesh.name = "wallCollision";
+				collisionObjs[index].GetComponent<MeshFilter> ().mesh.vertices = vertices;
+				collisionObjs[index].GetComponent<MeshFilter> ().mesh.uv = new [] {
+					new Vector2 (0, 0),
+					new Vector2 (0, 1),
+					new Vector2 (1, 1),
+					new Vector2 (1, 0)
+				};
+
+				switch (index)
+				{
+					case 0:
+						collisionObjs[index].GetComponent<MeshFilter> ().mesh.triangles = new [] {0, 1, 2, 2, 1, 3};
+						break;
+					case 1:
+						collisionObjs[index].GetComponent<MeshFilter> ().mesh.triangles = new [] {0, 2, 1, 1, 2, 3};
+						break;
+				}
+				collisionObjs[index].GetComponent<MeshFilter> ().mesh.RecalculateNormals ();
+			}
+
+		}
+
+		private void CreateCollisionObject()
+		{
+			for ( int index = 0; index < 2; index ++)
+			{
+
+				if (collisionObjs[index] != null)
+				{
+					Object.Destroy(collisionObjs[index]);
+				}
+
+
+				collisionObjs[index] = new GameObject();
+				collisionObjs[index].transform.position = new Vector3 (0, 0, 0);
+
+				collisionObjs[index].layer = 8; //ground
+				collisionObjs[index].name = "wallCollision";
+			
+
+			
+				collisionObjs[index].AddComponent<MeshFilter>();
+
+				collisionObjs[index].AddComponent<MeshRenderer>();
+
+
+				collisionObjs[index].AddComponent<MeshCollider>();
+				collisionObjs[index].GetComponent<MeshCollider>().sharedMesh = collisionObjs[index].GetComponent<MeshFilter>().mesh; 
+			}
+		}
+
+
+
 		
-		public GameObject  gfx;
+		public GameObject  gfx = null;
+		public GameObject[] collisionObjs = new GameObject[2] { null, null};
 		public List<EndPoint> points = new List<EndPoint> ();
 	};
 	
@@ -80,9 +169,8 @@ public class ModelMapGen : MonoBehaviour {
 
 	List<EndPoint> endpoints = new List<EndPoint> ();
 	List<Edge> edges = new List<Edge> ();
-
-
-	Edge activeEdge = new Edge(); 
+	
+	Edge activeEdge; 
 	EndPoint activeEndPoint = null;
 	VRoom activeRoom = null;
 
@@ -103,7 +191,7 @@ public class ModelMapGen : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		activeEdge.gfx = Object.Instantiate( LineGFXPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+		activeEdge = new Edge ( LineGFXPrefab);
 		targetGameObj = GameObject.Find ( GameObjectHierarchyRef.kGameObjectNamePointerTarget);
 
 		CreateRooms ();
@@ -128,6 +216,9 @@ public class ModelMapGen : MonoBehaviour {
 				Vector3 endPos = targetGameObj.transform.position;
 				endPos.y += kEdgeY;
 				lr.SetPosition (1, endPos);
+
+
+				activeEdge.UpdateCollisionObject(startPos, endPos);
 			}
 		}
 
@@ -152,6 +243,9 @@ public class ModelMapGen : MonoBehaviour {
 						Vector3 endPos = edge.points[1].point;
 						endPos.y += kEdgeY;
 						lr.SetPosition (1, endPos);
+
+
+						edge.UpdateCollisionObject(startPos, endPos);
 					}
 				}
 			}
@@ -324,9 +418,8 @@ public class ModelMapGen : MonoBehaviour {
 		EndPoint ep = new EndPoint ();
 		ep.point = atPoint;
 
-		Edge edgeA = new Edge();
+		Edge edgeA = new Edge(LineGFXPrefab);
 		{
-			edgeA.gfx = Object.Instantiate (LineGFXPrefab, new Vector3 (0, 0, 0), Quaternion.identity) as GameObject;
 			edgeA.points.Add (edge.points [0]);
 			edge.points [0].edges.Remove (edge);
 			edge.points [0].edges.Add (edgeA);
@@ -342,9 +435,8 @@ public class ModelMapGen : MonoBehaviour {
 		}
 		ep.edges.Add (edgeA);
 
-		Edge edgeB = new Edge();
+		Edge edgeB = new Edge(LineGFXPrefab);
 		{
-			edgeB.gfx = Object.Instantiate (LineGFXPrefab, new Vector3 (0, 0, 0), Quaternion.identity) as GameObject;
 			edgeB.points.Add (edge.points [1]);
 			edge.points [1].edges.Remove (edge);
 			edge.points [1].edges.Add (edgeB);
@@ -566,19 +658,25 @@ public class ModelMapGen : MonoBehaviour {
 				endPos.y += kEdgeY;
 				lr.SetPosition (1, endPos);
 
+				activeEdge.UpdateCollisionObject( activeEdge.points[0].point, activeEdge.points[1].point);
+
 				// Add new Edge to global edge list
 				edges.Add(activeEdge);
 
 				// Update new Edge
-				activeEdge = new Edge();
-				activeEdge.gfx = Object.Instantiate( LineGFXPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+				activeEdge = new Edge( LineGFXPrefab );
 				activeEdge.points.Add(endEndPoint);
+
+			
 			}
 		} else {
 			activeEdge.points.Clear();
 			LineRenderer lr = activeEdge.gfx.GetComponent<LineRenderer>();
 			lr.SetPosition (0, Vector3.zero);
 			lr.SetPosition (1, Vector3.zero);
+
+			//activeEdge.collisionObjs[0].SetActive(false);
+			//activeEdge.collisionObjs[1].SetActive(false);
 		}
 
 	}
@@ -657,9 +755,12 @@ public class ModelMapGen : MonoBehaviour {
 								pointPos.y += kEdgeY;
 								lr.SetPosition (epIndex, pointPos);
 
+
+
 								endPoint.edges.Add(edge);
 							}
 						}
+						edge.UpdateCollisionObject(edge.points[0].point, edge.points[1].point);
 
 					}
 

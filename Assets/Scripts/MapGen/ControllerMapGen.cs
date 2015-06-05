@@ -53,7 +53,7 @@ public class ControllerMapGen : MonoBehaviour {
 			return;
 		}
 
-		if (Input.touchCount < 1) {
+		//if (Input.touchCount < 1) {
 			switch (mapGenMenu.GetViewMenuSelectionIndex ()) {
 			case 0:
 				if (Input.GetMouseButton (1)) {
@@ -71,7 +71,7 @@ public class ControllerMapGen : MonoBehaviour {
 				break;
 			}
 			camerPanLastMousePosition = Input.mousePosition;
-		}
+		//}
 
 
 	

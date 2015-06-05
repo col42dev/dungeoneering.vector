@@ -11,6 +11,7 @@ public enum EToolsMenu {
 	kPlaceWall = 0,
 	kEditWall,
 	kPlaceRoom,
+	kView,
 }
 
 public enum EEditMenu {
@@ -27,7 +28,7 @@ public class ViewMapGenMenu : MonoBehaviour {
 	private int mainToolBarIndex = (int)EMainMenu.kTools;
 	private int toolsToolBarIndex = 0;
 	private int editToolBarIndex = 0;
-	private int viewsToolBarIndex = 0;
+	private int viewsToolBarIndex = 1;
 	private int gridsToolBarIndex = 0;	
 	private ModelMapGen  mapGen = null;
 	public Material material = null;
@@ -63,6 +64,7 @@ public class ViewMapGenMenu : MonoBehaviour {
 		toolsToolbarDictionary[EToolsMenu.kPlaceWall] =  "Place Wall"; 
 		toolsToolbarDictionary[EToolsMenu.kEditWall] =  "Edit Wall"; 
 		toolsToolbarDictionary[EToolsMenu.kPlaceRoom] =  "Place Room"; 
+		toolsToolbarDictionary[EToolsMenu.kView] =  "View"; 
 
 		editToolbarDictionary[EEditMenu.kSelectGrid] =  "Grid"; 
 	}
@@ -106,6 +108,17 @@ public class ViewMapGenMenu : MonoBehaviour {
 						}
 						if (GUI.Button (new Rect (120, 50, 100, 45), "Template B")) {
 							mapGen.OnSelectRoomTemplate(1);
+						}
+					}
+					break;
+				case (int)EToolsMenu.kView:
+					if (mapGen != null) 
+					{
+						if (GUI.Button (new Rect (15, 50, 100, 45), "Plan")) {
+							viewsToolBarIndex = 0;;
+						}
+						if (GUI.Button (new Rect (120, 50, 100, 45), "3D")) {
+							viewsToolBarIndex = 1;
 						}
 					}
 					break;
