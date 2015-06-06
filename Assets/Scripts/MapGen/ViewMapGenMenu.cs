@@ -29,7 +29,7 @@ public class ViewMapGenMenu : MonoBehaviour {
 	private int mainToolBarIndex = (int)EMainMenu.kTools;
 	private int toolsToolBarIndex = 0;
 	private int editToolBarIndex = 0;
-	private int viewsToolBarIndex = 1;
+	private int viewsToolBarIndex = 0;
 	private int gridsToolBarIndex = 0;	
 	private ModelMapGen  mapGen = null;
 	public Material material = null;

@@ -78,7 +78,7 @@ public class ControllerMapGen : MonoBehaviour {
 		// Zoom
 		if (Input.touchCount < 1) 
 		{
-			transform.Translate (0.0f, 0.0f, Input.GetAxis ("Mouse ScrollWheel") * 12);
+			transform.Translate (0.0f, 0.0f, Input.GetAxis ("Mouse ScrollWheel") * 4);
 		}
 
 

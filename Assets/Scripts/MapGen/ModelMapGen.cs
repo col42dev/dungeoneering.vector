@@ -32,7 +32,6 @@ public class ModelMapGen : MonoBehaviour {
 	private const float kEndPointProximityThreshold = 1.0f;
 	private const float kEdgeY = 0.05f;
 
-	ObjImporter objImporter = new ObjImporter ();
 
 
 	// Use this for initialization
@@ -126,7 +125,7 @@ public class ModelMapGen : MonoBehaviour {
 	{
 		Debug.Log ("OnSelect_Save");
 
-		
+
 		//Collision
 		List<GameObject> combinedGameObjectList = new List<GameObject>(); 
 
