@@ -7,6 +7,11 @@ public class Edge
 
 	private const float kEdgeY = 0.05f;
 
+	
+	public GameObject  gfx = null;
+	public GameObject[] collisionObjs = new GameObject[2] { null, null};
+	public List<EndPoint> points = new List<EndPoint> ();
+
 	public Edge(GameObject lineGFXPrefab)
 	{
 		if (gfx != null)
@@ -70,20 +75,7 @@ public class Edge
 		
 	}
 
-	public void SetPosition( Vector3 position) 
-	{
-		for (int index = 0; index < 2; index ++) 
-		{
-			
-			//collisionObjs[index].transform.position = position;
-		}
-	}
 
-
-	public Vector3 GetPosition() 
-	{
-		return new Vector3 (0, 0, 0); //collisionObjs[0].transform.position;
-	}
 
 	public void UpdateCollisionObject( Vector3 startPos, Vector3 endPos) 
 	{
@@ -118,6 +110,7 @@ public class Edge
 				break;
 			}
 			collisionObjs[index].GetComponent<MeshFilter> ().mesh.RecalculateNormals ();
+			collisionObjs[index].GetComponent<MeshFilter>().mesh.RecalculateBounds ();
 		}
 		
 	}
@@ -159,8 +152,5 @@ public class Edge
 	
 	
 	
-	
-	public GameObject  gfx = null;
-	public GameObject[] collisionObjs = new GameObject[2] { null, null};
-	public List<EndPoint> points = new List<EndPoint> ();
+
 };

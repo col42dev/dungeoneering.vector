@@ -33,8 +33,7 @@ public class ModelTargetMover : MonoBehaviour {
 		RaycastHit hit;
 		if (Physics.Raycast	(cam.ScreenPointToRay (Input.mousePosition), out hit, Mathf.Infinity/*, mask*/) && hit.point != target.position) {
 			target.position = hit.point;
-			target.position = new Vector3( Mathf.RoundToInt(target.position.x), target.position.y, Mathf.RoundToInt(target.position.z));
-	
+			target.position = new Vector3( Mathf.RoundToInt(target.position.x), 0.0f, Mathf.RoundToInt(target.position.z));
 		}
 	}
 

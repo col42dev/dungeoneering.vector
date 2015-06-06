@@ -41,7 +41,6 @@ public class ModelMapGen : MonoBehaviour {
 		activeEdge = new Edge ( LineGFXPrefab);
 		targetGameObj = GameObject.Find ( GameObjectHierarchyRef.kGameObjectNamePointerTarget);
 
-		CreateRooms ();
 	}
 
 	// Update is called once per frame
@@ -116,9 +115,6 @@ public class ModelMapGen : MonoBehaviour {
 				Vector3 endPos = edge.points[1].point + targetPos;
 				endPos.y += kEdgeY;
 				lr.SetPosition (1, endPos);
-
-				//edge.SetPosition(targetPos);
-				edge.UpdateCollisionObject(edge.points[0].point + targetPos, edge.points[1].point + targetPos);
 			}
 
 		}
@@ -209,67 +205,12 @@ public class ModelMapGen : MonoBehaviour {
 			combinedGameObjectList.Add (obj);
 		}
 
-
 		ObjExporter.DoExport (GameObject.Find ("Plane"), true, "ground");
 		ObjExporter.DoExport (combinedGameObjectList [0], true, "obstacles");
 		ObjExporter.DoExport (combinedGameObjectList [1], true, "viz");
 	
 		Object.Destroy (combinedGameObjectList [0]);
 		Object.Destroy (combinedGameObjectList [1]);
-
-
-
-	}
-
-	void CreateRooms()
-	{
-
-		VRoom r = new VRoom ();
-
-		r.endpoints.Add (new EndPoint ( new Vector3(0, 0,0)));
-		r.endpoints.Add (new EndPoint ( new Vector3(0, 0,4)));
-		r.endpoints.Add (new EndPoint ( new Vector3(4, 0,4)));
-		r.endpoints.Add (new EndPoint ( new Vector3(4, 0,0)));
-
-		r.edges.Add (new Edge (r.endpoints[0], r.endpoints[1]));
-		r.edges.Add (new Edge (r.endpoints[1], r.endpoints[2]));
-		r.edges.Add (new Edge (r.endpoints[2], r.endpoints[3]));
-		r.edges.Add (new Edge (r.endpoints[3], r.endpoints[0]));
-
-		rooms.Add (r);
-
-
-		r = new VRoom ();
-		
-		r.endpoints.Add (new EndPoint ( new Vector3(3, 0,0)));
-		r.endpoints.Add (new EndPoint ( new Vector3(7, 0,0)));
-		r.endpoints.Add (new EndPoint ( new Vector3(7, 0,8)));
-		r.endpoints.Add (new EndPoint ( new Vector3(10, 0,8)));
-		r.endpoints.Add (new EndPoint ( new Vector3(10, 0,11)));
-		r.endpoints.Add (new EndPoint ( new Vector3(7, 0,11)));
-		r.endpoints.Add (new EndPoint ( new Vector3(6, 0,14)));
-		r.endpoints.Add (new EndPoint ( new Vector3(4, 0,14)));
-		r.endpoints.Add (new EndPoint ( new Vector3(3, 0,11)));
-		r.endpoints.Add (new EndPoint ( new Vector3(0, 0,11)));
-		r.endpoints.Add (new EndPoint ( new Vector3(0, 0,8)));
-		r.endpoints.Add (new EndPoint ( new Vector3(3, 0,8)));
-	
-		
-		r.edges.Add (new Edge (r.endpoints[0], r.endpoints[1]));
-		r.edges.Add (new Edge (r.endpoints[1], r.endpoints[2]));
-		r.edges.Add (new Edge (r.endpoints[2], r.endpoints[3]));
-		r.edges.Add (new Edge (r.endpoints[3], r.endpoints[4]));
-		r.edges.Add (new Edge (r.endpoints[4], r.endpoints[5]));
-		r.edges.Add (new Edge (r.endpoints[5], r.endpoints[6]));
-		r.edges.Add (new Edge (r.endpoints[6], r.endpoints[7]));
-		r.edges.Add (new Edge (r.endpoints[7], r.endpoints[8]));
-		r.edges.Add (new Edge (r.endpoints[8], r.endpoints[9]));
-		r.edges.Add (new Edge (r.endpoints[9], r.endpoints[10]));
-		r.edges.Add (new Edge (r.endpoints[10], r.endpoints[11]));
-		r.edges.Add (new Edge (r.endpoints[11], r.endpoints[0]));
-
-		
-		rooms.Add (r);
 	}
 
 
@@ -415,116 +356,89 @@ public class ModelMapGen : MonoBehaviour {
 
 	public void OnSelectRoomTemplate(int index)
 	{
-		activeRoom = rooms [index];
+		VRoom r = new VRoom ();
+
+		switch (index)
+		{
+		case 0:
+			r.endpoints.Add (new EndPoint ( new Vector3(0, 0,0)));
+			r.endpoints.Add (new EndPoint ( new Vector3(0, 0,4)));
+			r.endpoints.Add (new EndPoint ( new Vector3(4, 0,4)));
+			r.endpoints.Add (new EndPoint ( new Vector3(4, 0,0)));
+			
+			r.edges.Add (new Edge (r.endpoints[0], r.endpoints[1]));
+			r.edges.Add (new Edge (r.endpoints[1], r.endpoints[2]));
+			r.edges.Add (new Edge (r.endpoints[2], r.endpoints[3]));
+			r.edges.Add (new Edge (r.endpoints[3], r.endpoints[0]));
+
+			break;
+		case 1:
+			r.endpoints.Add (new EndPoint ( new Vector3(3, 0,0)));
+			r.endpoints.Add (new EndPoint ( new Vector3(7, 0,0)));
+			r.endpoints.Add (new EndPoint ( new Vector3(7, 0,8)));
+			r.endpoints.Add (new EndPoint ( new Vector3(10, 0,8)));
+			r.endpoints.Add (new EndPoint ( new Vector3(10, 0,11)));
+			r.endpoints.Add (new EndPoint ( new Vector3(7, 0,11)));
+			r.endpoints.Add (new EndPoint ( new Vector3(6, 0,14)));
+			r.endpoints.Add (new EndPoint ( new Vector3(4, 0,14)));
+			r.endpoints.Add (new EndPoint ( new Vector3(3, 0,11)));
+			r.endpoints.Add (new EndPoint ( new Vector3(0, 0,11)));
+			r.endpoints.Add (new EndPoint ( new Vector3(0, 0,8)));
+			r.endpoints.Add (new EndPoint ( new Vector3(3, 0,8)));
+			
+			
+			r.edges.Add (new Edge (r.endpoints[0], r.endpoints[1]));
+			r.edges.Add (new Edge (r.endpoints[1], r.endpoints[2]));
+			r.edges.Add (new Edge (r.endpoints[2], r.endpoints[3]));
+			r.edges.Add (new Edge (r.endpoints[3], r.endpoints[4]));
+			r.edges.Add (new Edge (r.endpoints[4], r.endpoints[5]));
+			r.edges.Add (new Edge (r.endpoints[5], r.endpoints[6]));
+			r.edges.Add (new Edge (r.endpoints[6], r.endpoints[7]));
+			r.edges.Add (new Edge (r.endpoints[7], r.endpoints[8]));
+			r.edges.Add (new Edge (r.endpoints[8], r.endpoints[9]));
+			r.edges.Add (new Edge (r.endpoints[9], r.endpoints[10]));
+			r.edges.Add (new Edge (r.endpoints[10], r.endpoints[11]));
+			r.edges.Add (new Edge (r.endpoints[11], r.endpoints[0]));
+
+			break;
+		}
+
+		activeRoom = r;
+
 	}
 
 	public void placeRoom(Vector3 point, bool bEdgeSnap)
 	{
-
 		Debug.Log ("placeRoom" + point);
+
 		// update active room
-		if (activeRoom != null)
-		{
-			Vector3 targetPos = point; //targetGameObj.transform.position;
-		
-			for (int i = 0; i <  activeRoom.endpoints.Count; i ++)
+		if (activeRoom != null) 
+		{	
+			for (int i = 0; i < activeRoom.endpoints.Count; i ++)
 			{
-				activeRoom.endpoints[i].point += targetPos;
-			}
-
-			for (int i = 0; i <  activeRoom.endpoints.Count; i ++)
-			{
-				EndPoint startEndPoint = new EndPoint();
-				startEndPoint.point = activeRoom.endpoints[i].point;
-				startEndPoint.edges = activeRoom.endpoints[i].edges;
-
-
-				if ( MakeEndPoint(startEndPoint.point, ref startEndPoint))
-				{	// new endpoint
-					Edge nearestEdge = EdgeInProximity(startEndPoint.point, bEdgeSnap);
-					if (nearestEdge!= null)
-					{
-						Vector3 edgePoint =  NearestPointOnEdge( startEndPoint.point, nearestEdge);
-						startEndPoint = SplitEdge( nearestEdge, edgePoint);
-
-						foreach (Edge edge in activeRoom.endpoints[i].edges)
-						{
-							if (edge.points[0] == activeRoom.endpoints[i])
-							{
-								edge.points[0] = startEndPoint;
-							}
-							if (edge.points[1] == activeRoom.endpoints[i])
-							{
-								edge.points[1] = startEndPoint;
-							}
-							startEndPoint.edges.Add(edge);
-						}
-						activeRoom.endpoints[i] = startEndPoint;
-					}
-					else
-					{
-						foreach (Edge edge in activeRoom.endpoints[i].edges)
-						{
-							if (edge.points[0] == activeRoom.endpoints[i])
-							{
-								edge.points[0] = startEndPoint;
-							}
-							if (edge.points[1] == activeRoom.endpoints[i])
-							{
-								edge.points[1] = startEndPoint;
-							}
-							startEndPoint.edges.Add(edge);
-						}
-	
-					
-						activeRoom.endpoints[i] = startEndPoint;
-
-						endpoints.Add( activeRoom.endpoints[i] );
-					}
-				}
-				else
-				{
-					foreach (Edge edge in activeRoom.endpoints[i].edges)
-					{
-						if (edge.points[0] == activeRoom.endpoints[i])
-						{
-							edge.points[0] = startEndPoint;
-						}
-						if (edge.points[1] == activeRoom.endpoints[i])
-						{
-							edge.points[1] = startEndPoint;
-						}
-						startEndPoint.edges.Add(edge);
-					}
-
-					activeRoom.endpoints[i] = startEndPoint;
-				}
+				activeRoom.endpoints[i].point += point;
 			}
 
 			foreach (Edge edge in activeRoom.edges)
 			{
-	
-				LineRenderer lr = edge.gfx.GetComponent<LineRenderer>();
-				
 				Vector3 startPos = edge.points[0].point;
-				startPos.y += kEdgeY;
-				lr.SetPosition (0, startPos);
-				
 				Vector3 endPos = edge.points[1].point;
-				endPos.y += kEdgeY;
-				lr.SetPosition (1, endPos);
 
 				edge.UpdateCollisionObject(startPos, endPos);
-
-				edges.Add(edge);
-
 			}
-			
+
+			foreach (EndPoint ep in activeRoom.endpoints)
+			{
+				endpoints.Add(ep);
+			}
+
+			foreach (Edge edge in activeRoom.edges)
+			{
+				edges.Add(edge);
+			}
 		}
 
-		rooms.Clear ();
-		CreateRooms ();
-		activeRoom = null;
+		activeRoom = new VRoom ();
 	}
 
 	public void placePoint( Vector3 point, bool bEdgeSnap) 
@@ -627,9 +541,6 @@ public class ModelMapGen : MonoBehaviour {
 			LineRenderer lr = activeEdge.gfx.GetComponent<LineRenderer>();
 			lr.SetPosition (0, Vector3.zero);
 			lr.SetPosition (1, Vector3.zero);
-
-			//activeEdge.collisionObjs[0].SetActive(false);
-			//activeEdge.collisionObjs[1].SetActive(false);
 		}
 
 	}
@@ -752,6 +663,10 @@ public class ModelMapGen : MonoBehaviour {
 						}
 
 						Object.Destroy (edge.gfx);
+
+						Object.Destroy (edge.collisionObjs[0]);
+						Object.Destroy (edge.collisionObjs[1]);
+
 						edges.Remove (edge);
 					}
 				}
@@ -775,8 +690,6 @@ public class ModelMapGen : MonoBehaviour {
 				}
 			}
 
-			//Debug.Log ("nearest edge  " +  mindist.ToString());
-
 			if ( mindist < kEndPointProximityThreshold)
 			{
 				for (int epIndex = 0; epIndex < 2; epIndex ++) 
@@ -788,6 +701,8 @@ public class ModelMapGen : MonoBehaviour {
 					}
 				}
 				Object.Destroy (nearestEdge.gfx);
+				Object.Destroy (nearestEdge.collisionObjs[0]);
+				Object.Destroy (nearestEdge.collisionObjs[1]);
 				edges.Remove (nearestEdge);
 			}
 		}
