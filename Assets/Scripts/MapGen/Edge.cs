@@ -134,8 +134,7 @@ public class Edge
 			
 			
 			collisionObjs[index] = new GameObject();
-			//collisionObjs[index].transform.position = new Vector3 (0, 0, 0);
-			
+		
 			collisionObjs[index].layer = 9; //obstacles
 			collisionObjs[index].name = "wallCollision";
 			
@@ -153,7 +152,6 @@ public class Edge
 			
 			
 			collisionObjs[index].AddComponent<MeshCollider>();
-			//collisionObjs[index].GetComponent<MeshCollider>().sharedMesh = collisionObjs[index].GetComponent<MeshFilter>().mesh; 
 		}
 	}
 	
