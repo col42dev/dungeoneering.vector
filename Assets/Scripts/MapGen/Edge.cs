@@ -129,7 +129,7 @@ public class Edge
 			collisionObjs[index] = new GameObject();
 			collisionObjs[index].transform.position = new Vector3 (0, 0, 0);
 			
-			collisionObjs[index].layer = 8; //ground
+			collisionObjs[index].layer = 9; //obstacles
 			collisionObjs[index].name = "wallCollision";
 			
 			
