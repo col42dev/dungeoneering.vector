@@ -19,7 +19,7 @@ public class ViewGridOverlay : MonoBehaviour {
 	public float startY;
 	public float startZ;
 	
-	private float offsetY = 0;
+	private float offsetY = 0.1f;
 	private float scrollRate = 0.1f;
 	private float lastScroll = 0f;
 	

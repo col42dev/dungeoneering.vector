@@ -81,12 +81,15 @@ public class Edge
 	{
 		for (int index = 0; index < 2; index ++) 
 		{
+
+			collisionObjs[index].transform.position = startPos;
+
 			Vector3[] vertices = new Vector3[]
 			{
-				startPos,
-				endPos,
-				startPos + new Vector3 (0, 2, 0),
-				endPos + new Vector3 (0, 2, 0)
+				startPos 							- startPos - new Vector3(0, 1, 0),
+				endPos 								- startPos - new Vector3(0, 1, 0),
+				startPos + new Vector3 (0, 3, 0) 	- startPos,
+				endPos + new Vector3 (0, 3, 0) 		- startPos
 			};
 			
 			
@@ -102,16 +105,20 @@ public class Edge
 			
 			switch (index)
 			{
-			case 0:
-				collisionObjs[index].GetComponent<MeshFilter> ().mesh.triangles = new [] {0, 1, 2, 2, 1, 3};
-				break;
-			case 1:
-				collisionObjs[index].GetComponent<MeshFilter> ().mesh.triangles = new [] {0, 2, 1, 1, 2, 3};
-				break;
+				case 0:
+					collisionObjs[index].GetComponent<MeshFilter> ().mesh.triangles = new [] {0, 1, 2, 2, 1, 3};
+					break;
+				case 1:
+					collisionObjs[index].GetComponent<MeshFilter> ().mesh.triangles = new [] {0, 2, 1, 1, 2, 3};
+					break;
 			}
-			collisionObjs[index].GetComponent<MeshFilter> ().mesh.RecalculateNormals ();
-			collisionObjs[index].GetComponent<MeshFilter>().mesh.RecalculateBounds ();
+			collisionObjs[index].GetComponent<MeshFilter>().mesh.RecalculateNormals();
+			collisionObjs[index].GetComponent<MeshFilter>().mesh.RecalculateBounds();
+
+			collisionObjs[index].GetComponent<MeshCollider>().sharedMesh = collisionObjs[index].GetComponent<MeshFilter>().mesh; 
 		}
+
+		AstarPath.active.Scan();
 		
 	}
 	
@@ -127,7 +134,7 @@ public class Edge
 			
 			
 			collisionObjs[index] = new GameObject();
-			collisionObjs[index].transform.position = new Vector3 (0, 0, 0);
+			//collisionObjs[index].transform.position = new Vector3 (0, 0, 0);
 			
 			collisionObjs[index].layer = 9; //obstacles
 			collisionObjs[index].name = "wallCollision";
@@ -146,7 +153,7 @@ public class Edge
 			
 			
 			collisionObjs[index].AddComponent<MeshCollider>();
-			collisionObjs[index].GetComponent<MeshCollider>().sharedMesh = collisionObjs[index].GetComponent<MeshFilter>().mesh; 
+			//collisionObjs[index].GetComponent<MeshCollider>().sharedMesh = collisionObjs[index].GetComponent<MeshFilter>().mesh; 
 		}
 	}
 	
