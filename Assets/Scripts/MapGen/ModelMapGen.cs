@@ -317,6 +317,7 @@ public class ModelMapGen : MonoBehaviour {
 			Vector3 endPos = edgeA.points[1].point;
 			endPos.y += kEdgeY;
 			lr.SetPosition (1, endPos);
+			edgeA.UpdateCollisionObject(startPos, endPos);
 		}
 		ep.edges.Add (edgeA);
 
@@ -334,6 +335,7 @@ public class ModelMapGen : MonoBehaviour {
 			Vector3 endPos = edgeB.points[1].point;
 			endPos.y += kEdgeY;
 			lr.SetPosition (1, endPos);
+			edgeB.UpdateCollisionObject(startPos, endPos);
 		}
 		ep.edges.Add (edgeB);
 
@@ -347,6 +349,8 @@ public class ModelMapGen : MonoBehaviour {
 
 		// Remove original edge from global Edges list.
 		Object.Destroy (edge.gfx);
+		Object.Destroy (edge.collisionObjs[0]);
+		Object.Destroy (edge.collisionObjs[1]);
 		edges.Remove (edge);
 
 		return ep;
