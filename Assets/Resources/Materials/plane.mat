@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: floortile0
+  m_Name: plane
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
@@ -18,8 +18,8 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: 56648f89649774b42a4d0fc7c6a181ea, type: 3}
-          m_Scale: {x: 4, y: 1}
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -54,7 +54,7 @@ Material:
           name: _EmissionMap
         second:
           m_Texture: {fileID: 0}
-          m_Scale: {x: 4, y: 1}
+          m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -138,7 +138,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .602941155, g: .594074368, b: .594074368, a: 1}
+        second: {r: .286764681, g: .263570487, b: .263570487, a: 1}
       data:
         first:
           name: _EmissionColorUI

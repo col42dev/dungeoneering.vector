@@ -97,9 +97,9 @@ public class ModelMapGen : MonoBehaviour {
 				collisionObjs[index].GetComponent<MeshFilter> ().mesh.vertices = vertices;
 				collisionObjs[index].GetComponent<MeshFilter> ().mesh.uv = new [] {
 					new Vector2 (0, 0),
+					new Vector2 (1, 0),
 					new Vector2 (0, 1),
-					new Vector2 (1, 1),
-					new Vector2 (1, 0)
+					new Vector2 (1, 1)
 				};
 
 				switch (index)
@@ -138,6 +138,12 @@ public class ModelMapGen : MonoBehaviour {
 				collisionObjs[index].AddComponent<MeshFilter>();
 
 				collisionObjs[index].AddComponent<MeshRenderer>();
+
+
+				Material mat = Resources.Load ("Materials/floortile0", typeof(Material)) as Material; 
+				Material [] mats = new Material[1];
+				mats [0] = mat;
+				collisionObjs[index].GetComponent<Renderer> ().materials = mats;
 
 
 				collisionObjs[index].AddComponent<MeshCollider>();
@@ -276,6 +282,100 @@ public class ModelMapGen : MonoBehaviour {
 	}
 
 
+	public void OnSelect_Save(  )
+	{
+		Debug.Log ("OnSelect_Save");
+
+		
+		//Collision
+		List<GameObject> combinedGameObjectList = new List<GameObject>(); 
+
+		for (int layer = 9; layer <= 10; layer ++) 
+		{
+			GameObject obj = null;
+
+			obj = new GameObject();
+			obj.transform.position = new Vector3 (0, 0, 0);
+
+			obj.layer = 8; 
+
+			obj.AddComponent<MeshFilter>();
+
+			//Assign a default material since wavefront .obj format requires one.
+			obj.AddComponent<MeshRenderer> ();
+
+			if (layer != 10)
+			{
+				obj.GetComponent<MeshRenderer> ().enabled = false; 
+				Material mat = Resources.Load ("Materials/floortile0", typeof(Material)) as Material; 
+				Material [] mats = new Material[1];
+				mats [0] = mat;
+				obj.GetComponent<Renderer> ().materials = mats;
+			}
+
+			Transform[] transforms = gameObject.GetComponentsInChildren<Transform> ();
+			List<CombineInstance> combinedInstanceList = new List<CombineInstance> ();
+
+			if ( layer != 8)
+			{
+				foreach (Edge edge in edges) 
+				{
+					for (int index = 0; index < 2; index ++)
+					{
+						MeshFilter mf = edge.collisionObjs [index].GetComponent<MeshFilter> ();
+						
+						if (mf != null) {
+
+							CombineInstance thisCombine = new CombineInstance ();
+							thisCombine.mesh = mf.sharedMesh;
+							thisCombine.transform = mf.transform.localToWorldMatrix;
+								
+							combinedInstanceList.Add (thisCombine);
+								
+							if ( layer == 10)
+							{
+								obj.transform.GetComponent<Renderer> ().materials = mf.gameObject.transform.GetComponent<Renderer> ().materials;
+							}
+						}
+					}
+				}
+			}
+			
+			
+			obj.GetComponent<MeshFilter> ().mesh = new Mesh ();
+			obj.GetComponent<MeshFilter> ().mesh.CombineMeshes (combinedInstanceList.ToArray (), true, true);
+			obj.GetComponent<MeshFilter> ().mesh.name = "levelMesh";
+
+			
+			obj.GetComponent<MeshFilter> ().mesh.RecalculateBounds ();
+			obj.GetComponent<MeshFilter> ().mesh.RecalculateNormals ();
+			
+			
+			// Add MeshCollider
+			switch (layer) {
+			case 8: // ground
+			case 9: // obstacle
+				obj.AddComponent<MeshCollider> ();
+				obj.GetComponent<MeshCollider> ().sharedMesh = obj.GetComponent<MeshFilter> ().mesh;
+				obj.GetComponent<MeshCollider> ().sharedMesh.RecalculateBounds ();
+				obj.GetComponent<MeshCollider> ().sharedMesh.RecalculateNormals ();
+				break;
+			}
+			
+			combinedGameObjectList.Add (obj);
+		}
+
+
+		ObjExporter.DoExport (GameObject.Find ("Plane"), true, "ground");
+		ObjExporter.DoExport (combinedGameObjectList [0], true, "obstacles");
+		ObjExporter.DoExport (combinedGameObjectList [1], true, "viz");
+	
+		Object.Destroy (combinedGameObjectList [0]);
+		Object.Destroy (combinedGameObjectList [1]);
+
+
+
+	}
 
 	void CreateRooms()
 	{

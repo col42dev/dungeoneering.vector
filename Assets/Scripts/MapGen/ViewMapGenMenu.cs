@@ -12,6 +12,7 @@ public enum EToolsMenu {
 	kEditWall,
 	kPlaceRoom,
 	kView,
+	kFile,
 }
 
 public enum EEditMenu {
@@ -53,18 +54,16 @@ public class ViewMapGenMenu : MonoBehaviour {
 	{
 		return viewsToolBarIndex;
 	}
-
-
-
 	
 	// Use this for initialization
-	void Start () {
-	
+	void Start () 
+	{
 
 		toolsToolbarDictionary[EToolsMenu.kPlaceWall] =  "Place Wall"; 
 		toolsToolbarDictionary[EToolsMenu.kEditWall] =  "Edit Wall"; 
 		toolsToolbarDictionary[EToolsMenu.kPlaceRoom] =  "Place Room"; 
 		toolsToolbarDictionary[EToolsMenu.kView] =  "View"; 
+		toolsToolbarDictionary[EToolsMenu.kFile] =  "File"; 
 
 		editToolbarDictionary[EEditMenu.kSelectGrid] =  "Grid"; 
 	}
@@ -122,6 +121,16 @@ public class ViewMapGenMenu : MonoBehaviour {
 						}
 					}
 					break;
+				case (int)EToolsMenu.kFile:
+					if (mapGen != null) 
+					{
+						if (GUI.Button (new Rect (15, 50, 100, 45), "Export")) 
+						{
+							mapGen.OnSelect_Save();
+						}
+
+					}
+				break;
 				}
 
 
